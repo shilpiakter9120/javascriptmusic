@@ -2,6 +2,7 @@ import { visualizeSong, setGetCurrentTimeFunction, setPaused } from '../../visua
 import { WorkerMessageHandler } from '../../common/workermessagehandler.js';
 import { toggleSpinner, setProgressbarValue, attachSeek } from '../../app.js';
 import { audioBufferToWav } from '../../common/audiobuffertowav.js';
+import { connectLevelAnalyser } from '../../analyser/levelanalysernode.js';
 
 export let audioworkletnode;
 
@@ -78,7 +79,8 @@ export async function exportToWav(eventlist, wasm_synth_bytes) {
         renderSampleRate);
 
     await offlineCtx.audioWorklet.addModule('./midisequencer/audioworkletprocessorsequencer.js');
-    await connectAudioWorklet(offlineCtx, wasm_synth_bytes, eventlist, true);
+    const audioworkletcontainer = await connectAudioWorklet(offlineCtx, wasm_synth_bytes, eventlist, true);
+    connectLevelAnalyser(audioworkletcontainer.audioworkletnode);
 
     console.log('rendering audio');
 
