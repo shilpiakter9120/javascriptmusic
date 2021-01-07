@@ -61,7 +61,7 @@ Array.prototype.quantize = function (stepsperbeat, percentage = 1) {
 }
 
 Array.prototype.fixVelocity = function (velocity) {
-    return this.map(evt => evt.fixVelocity(velocity));
+    return this.map(evt => evt.fixVelocity ? evt.fixVelocity(velocity) : evt);
 }
 
 Array.prototype.repeat = function (times = 1) {
