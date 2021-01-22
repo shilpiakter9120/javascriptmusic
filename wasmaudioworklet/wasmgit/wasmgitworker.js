@@ -90,11 +90,15 @@ onmessage = async (msg) => {
 
     lg.callMain(['fetch', 'origin']);
     lg.callMain(['merge', 'origin/master']);
-    lg.callMain(['push']);
-    FS.syncfs(false, () => {
-      console.log(currentRepoRootDir, 'stored to indexeddb');
-      postMessage({ dircontents: FS.readdir('.') });
-    });
+    callAndCaptureOutput(['push']);
+    if (stderr) {
+      postMessage({ 'stderr': stderr });
+    } else {
+      FS.syncfs(false, () => {
+        console.log(currentRepoRootDir, 'stored to indexeddb');
+        postMessage({ dircontents: FS.readdir('.') });
+      });
+    }
   } else if (msg.data.command === 'synclocal') {
     currentRepoRootDir = msg.data.url.substring(msg.data.url.lastIndexOf('/') + 1);
     console.log('synclocal', currentRepoRootDir);

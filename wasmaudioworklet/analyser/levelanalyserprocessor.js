@@ -5,6 +5,8 @@ class LevelAnalyserProcessor extends AudioWorkletProcessor {
         clips: []
     };
 
+    position = 0;
+
     constructor() {
         super();
 
@@ -26,12 +28,14 @@ class LevelAnalyserProcessor extends AudioWorkletProcessor {
                 if (Math.abs(channeldata[n]) >= threshold) {
                     this.stats.clips.push({
                         channel: ch,
-                        position: n,
-                        time: (n / sampleRate)
+                        position: this.position + n,
+                        time: ((this.position + n) / sampleRate)
                     });
                 }
+
             }
         }
+        this.position += SAMPLE_FRAMES;
         return false;
     }
 }
